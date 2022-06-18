@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { View, Text, TouchableOpacity, Image, StyleSheet, FlatList, Alert, TextInput } from 'react-native';
+import { View, Text, Image, StyleSheet, FlatList, Alert, TextInput } from 'react-native';
 import Button from "./Button";
 import Modal from "react-native-modal";
 import Toast from 'react-native-simple-toast'
@@ -64,7 +64,7 @@ const List = (props) => {
             <View style={{ ...styles.container }}>
                 <View style={{ flexDirection: 'row' }}>
                     <Image
-                        source={items.photo != 'N/A' ? { uri: items.photo } : require('../assets/user.jpg')}
+                        source={{ uri: items.photo }}
                         style={{ ...styles.image }}
                         resizeMode={'contain'}
                     />
@@ -107,8 +107,8 @@ const List = (props) => {
                 animationInTiming={1000}
             >
                 <View style={{ backgroundColor: '#fff', height: 300, borderTopRightRadius: 12, borderTopLeftRadius: 12 }}>
-                    <View style={{ alignItems: 'center', padding: 5 }}>
-                        <Text>
+                    <View style={{ alignItems: 'center', paddingTop: 15 }}>
+                        <Text style={{ fontSize: 18, color: '#000000', fontWeight: 'bold' }}>
                             Edit Contact
                         </Text>
                     </View>
@@ -127,6 +127,7 @@ const List = (props) => {
                             placeholder="Age"
                             style={{ ...styles.input }}
                             onChangeText={(v) => handleChange('age', v)}
+                            keyboardType='number-pad'
                         />
                         <TextInput
                             placeholder="Photo"
@@ -171,7 +172,8 @@ const styles = StyleSheet.create({
         height: 40,
         color: '#778899',
         borderWidth: 1,
-        marginTop: 10
+        marginTop: 10,
+        borderColor: '#778899'
     },
 
 

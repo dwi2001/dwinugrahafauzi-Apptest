@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, TextInput, ActivityIndicator } from 'react-native'
 import List from "../component/List";
 import axios from 'axios'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Modal from "react-native-modal";
 import Button from "../component/Button";
 import Toast from 'react-native-simple-toast'
+import { connect } from 'react-redux';
+import { getData } from "../state/actions/Action";
 
 
 
-
-const Home = () => {
+const Home = (props) => {
 
     useEffect(() => {
-        getData()
+        getDatass()
+        // props.dispatch(getData())
     }, [])
 
     const [data, setData] = useState([])
@@ -22,9 +24,7 @@ const Home = () => {
     const [addContacts, setaddContacts] = useState({})
 
 
-
-
-    const getData = () => {
+    const getDatass = () => {
         setLoading(true)
         axios.get(`https://simple-contact-crud.herokuapp.com/contact`)
             .finally(() => setLoading(false))
@@ -37,7 +37,6 @@ const Home = () => {
         setLoading(true)
         axios.post(`https://simple-contact-crud.herokuapp.com/contact`,
             {
-
                 "firstName": addContacts.firstName,
                 "lastName": addContacts.lastName,
                 "age": parseInt(addContacts.age),
@@ -46,7 +45,6 @@ const Home = () => {
             .finally(() => setLoading(false))
             .then(res =>
                 Toast.show(res.data.message)
-
             )
     }
 
@@ -62,77 +60,82 @@ const Home = () => {
 
     return (
         <View style={{ ...styles.container }}>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ ...styles.textTitle }}>
-                    CONTACT
-                </Text>
-            </View>
-            <List data={data}
-                refresh={() => getData()}
-                loading={loading}
-            />
-            <TouchableOpacity
-                style={{ ...styles.addBtn }}
-                onPress={() => setModalEdit(true)}
-            >
-                <Icon name="plus" size={20} color='#FFF' />
-            </TouchableOpacity>
+            <ImageBackground source={require('../assets/Background.png')} resizeMode='cover' style={{ flex: 1, justifyContent: 'center' }}>
+                {
+                    loading ?
+                        <ActivityIndicator
+                            visible={loading}
+                            textContent={'Loading...'}
+                            textStyle={styles.spinnerTextStyle}
+                        />
+                        :
+                        <List data={data}
+                            refresh={() => getData()}
+                            loading={loading}
+                        />
+                }
+                <TouchableOpacity
+                    style={{ ...styles.addBtn }}
+                    onPress={() => setModalEdit(true)}
+                >
+                    <Icon name="plus" size={20} color='#FFF' />
+                </TouchableOpacity>
 
 
-            <Modal
-                isVisible={modalEdit}
-                animationIn='slideInDown'
-                animationOutTiming={1000}
-                animationInTiming={1000}
-            >
-                <View style={{ backgroundColor: '#fff', height: 300, borderTopRightRadius: 12, borderTopLeftRadius: 12 }}>
-                    <View style={{ alignItems: 'center', padding: 5 }}>
-                        <Text>
-                            Add Contact
-                        </Text>
-                    </View>
-                    <View style={{ padding: 10, }}>
-                        <TextInput
-                            placeholder="First Name"
-                            style={{ ...styles.input }}
-                            onChangeText={(v) => handleName('firstName', v)}
-                        />
-                        <TextInput
-                            placeholder="Last Name"
-                            style={{ ...styles.input }}
-                            onChangeText={(v) => handleName('lastName', v)}
-                        />
-                        <TextInput
-                            placeholder="Age"
-                            style={{ ...styles.input }}
-                            onChangeText={(v) => handleName('age', v)}
-                        />
-                        <TextInput
-                            placeholder="Photo"
-                            style={{ ...styles.input }}
-                            onChangeText={(v) => handleName('photo', v)}
-                        />
-                    </View>
+                <Modal
+                    isVisible={modalEdit}
+                    animationIn='slideInDown'
+                    animationOutTiming={1000}
+                    animationInTiming={1000}
+                >
+                    <View style={{ ...styles.modalContainer }}>
+                        <View style={{ alignItems: 'center', padding: 5 }}>
+                            <Text style={{ fontSize: 18, color: '#000000', fontWeight: 'bold' }}>
+                                Add Contact
+                            </Text>
+                        </View>
+                        <View style={{ padding: 10, }}>
+                            <TextInput
+                                placeholder="First Name"
+                                style={{ ...styles.input }}
+                                onChangeText={(v) => handleName('firstName', v)}
+                            />
+                            <TextInput
+                                placeholder="Last Name"
+                                style={{ ...styles.input }}
+                                onChangeText={(v) => handleName('lastName', v)}
+                            />
+                            <TextInput
+                                placeholder="Age"
+                                style={{ ...styles.input }}
+                                onChangeText={(v) => handleName('age', v)}
+                            />
+                            <TextInput
+                                placeholder="Photo"
+                                style={{ ...styles.input }}
+                                onChangeText={(v) => handleName('photo', v)}
+                            />
+                        </View>
 
-                    <View style={{ ...styles.containerBtn }}>
-                        <Button title='Cancel' style={{ flex: 1, backgroundColor: '#D3D3D3', }} text={{ ...styles.textBtn }} onPress={() => toggleModal()} />
-                        <View style={{ ...styles.line }} />
-                        <Button title='Submit' style={{ flex: 1, }} text={{ ...styles.textBtn }} onPress={() => { addContact(), toggleModal() }} />
+                        <View style={{ ...styles.containerBtn }}>
+                            <Button title='Cancel' style={{ flex: 1, backgroundColor: '#D3D3D3', }} text={{ ...styles.textBtn }} onPress={() => toggleModal()} />
+                            <View style={{ ...styles.line }} />
+                            <Button title='Submit' style={{ flex: 1, }} text={{ ...styles.textBtn }} onPress={() => { addContact(), toggleModal() }} />
+                        </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
+            </ImageBackground>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
         backgroundColor: '#fff'
     },
     textTitle: {
-        fontSize: 40,
+        fontSize: 30,
         color: '#000000',
         fontWeight: '800',
         marginTop: 10
@@ -163,7 +166,6 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     addBtn: {
-
         width: 50,
         height: 50,
         justifyContent: 'center',
@@ -173,7 +175,23 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 35,
         right: 20,
-    }
+    },
+    modalContainer: {
+        backgroundColor: '#fff',
+        height: 300,
+        borderTopRightRadius: 12,
+        borderTopLeftRadius: 12
+    },
+    spinnerTextStyle: {
+        color: '#000',
+    },
 })
 
-export default Home
+
+const mapStateToProps = state => {
+    return {
+        getDatas: state.data.data
+    }
+}
+
+export default connect(mapStateToProps)(Home)

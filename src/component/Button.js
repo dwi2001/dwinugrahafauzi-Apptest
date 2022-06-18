@@ -5,7 +5,6 @@ import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 const Button = (props) => {
 
     return (
-
         <TouchableOpacity style={{ ...props.style, ...style.btn }} onPress={props.onPress}>
             <Text style={{ ...style.text, ...props.text }}>
                 {props.title}
@@ -24,7 +23,6 @@ const style = StyleSheet.create({
         fontSize: 12,
         color: '#778899'
     }
-
 })
 
 export default Button;

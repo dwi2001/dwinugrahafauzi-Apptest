@@ -9,33 +9,31 @@
 import React from 'react';
 import type { Node } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
+
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import AppContainer from './src/navigator/AppContainer';
+import store from './src/state/Store';
+import { Provider } from 'react-redux';
+
 
 
 
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
-  // const backgroundStyle = {
-  //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  // };
-
   return (
-    <NavigationContainer>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContainer />
+    <Provider store={store}>
 
-    </NavigationContainer>
+      <NavigationContainer>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <AppContainer />
+      </NavigationContainer>
+    </Provider>
   );
 };
 
